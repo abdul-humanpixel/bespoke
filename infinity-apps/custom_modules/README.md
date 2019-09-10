@@ -1,109 +1,131 @@
-# Integrating custom angular modules with new pexip infinity client (proposal) 
+# Custom Modules for Infinity Connect
 
-In the new pexip infinity client we are trying to . Besides plugin mechanism we introduced while back we are trying to be able to solve as well more complicated problems that ppl might have in case of branding. With custom modules you are able to integrate powerful angular modules with our existing pexip client bundle. Currently with this solution we are able to create custom pages inside the client or add permament components as well like custom `header` for example.
+With custom modules you are able to integrate powerful angular modules with our existing pexip client bundle.  You are able to create applications that can sit at the beginning or end of your application that have their own routes.  This way, you can run your custom module when users first join your webapp and also when they finish using the webapp.  You can also create custom components within the application e.g. a header that is always visible.
 
-Let's start with creating new angular module from Angular CLI
+## Prerequisites 
 
-**First if you dont have angular CLI run (this require Node.js)**
+You're going to need to have a basic understanding of web development, primarily Angular, Typescript and their associated tools.  You'll also need access to a test Pexip deployment whilst developing/debugging and also access to the branding portal to download a skeleton brand later on.
 
-`npm install -g @angular/cli`
+### Angular CLI Installation
 
-**Now you can create new angular project**
+These examples all use Angular CLI - install this globally (may require sudo) if you haven't already got it.
 
-`ng new my-custom-module --create-application=false`
-
-Im using `--create-application=false` here to create an empty skeleton, if you want to test locally your module you can remove that flag.
-
-**After successuly creating the skeleton we can create our module/library**
-
-```
-cd my-custom-module
-ng generate library my-custom-module --prefix=mymodule
+```sh
+npm install -g @angular/cli
 ```
 
-(you can use this flags as well if you want to have components in separated files and use scss instead of css)
+##  Simple Example
 
-Of course `my-custom-module` and prefix `mymodule` you can change to the name you want. 
+### Create the application
 
-If you are familiar with Angular 2+ then you can see you module files are located in `projects/my-custom-module/src/lib` inside the module you can create many component which are either child component or the ones that you will be able to import inside pexip infinity client. 
+```sh
+ng new gather-info --create-application=false
+```
 
-Let's open `my-custom-module.component.ts` and change a text in the template from `my-custom-module works!` to `my first custom component in the pexip client!`
+Answer questions about angular routing and analytics
 
-To be able for pexip client to understand which components are exported and where you should put them we need to edit `my-custom-module.module.ts` we need to add entry to the NgModule decorator called `providers`.
+ - Would you like to add Angular routing? :: No
+ - Which stylesheet format would you like to use? :: CSS
 
-```ts
-import { NgModule } from '@angular/core';
-import { MyCustomModuleComponent } from './my-custom-module.component';
+### Create the module library
 
-@NgModule({
-  declarations: [MyCustomModuleComponent],
-  entryComponents: [MyCustomModuleComponent],
-  imports: [
-  ],
-  providers: [{
-    provide: 'plugins',
-    useValue: [{
-      name: 'mymodule-my-custom-module',
-      component: MyCustomModuleComponent
-      type: 'page',
-      path: 'welcome',
-    }],
-    multi: true
-  }],
-  exports: [MyCustomModuleComponent]
-})
-export class MyCustomModuleModule { }
+Move into the freshly created repo for your module and create the library.
+
+```sh
+cd gather-info
+ng generate library gather-info --prefix=gatherinfo
+```
+
+At this point you can now work on your application modules as in any Angular2+ app.
+
+Module files will be located in `projects/gather-info/src/lib` from
+
+modify the `gather-info.component.ts` and update the template with some text
+
+### Prepare components for export into pexip app
+
+Modify the module ts file `projects/gather-info/gather-info.module.ts` to include the `providers` to the NgModule decorator.
+
+```typescript
+  import { NgModule } from '@angular/core';
+  import { GatherInfoComponent } from './gather-info.component';
+
+  @NgModule({
+    declarations: [GatherInfoComponent],
+      imports: [
+      ],
+      providers: [{
+          provide: 'plugins',
+          useValue: [{
+              name: 'gatherinfo-gather-info',
+              component: GatherInfoComponent,
+              type: 'page',
+              path: 'gather',
+          }]
+      }],
+      exports: [GatherInfoComponent]
+  })
+  export class GatherInfoModule { }
 ```
 
 So lets eplain each part first. Components we want to use in pexip clients need to be included in `declarations`, `entryComponents` and `exports`, after that we need to include `providers` as I mentioned before, we will only change the `useValue` array, rest should be always the same.
 
-Each element of `useValue` array contains an object with
-* `name` - the `selector` of the component we can find in `my-custom-module.component.ts`.
-* `component` just imported component (you can see `import` above)
-* `type` [page|header] - represents how the component will be included in the pexip clients its either `page` which will be rendered as a separate page eg `webapp2/my-custom-welcome-page` (this needs `path` arg) or `header` (the name might change) this is component that is bascially loaded in the main component in the app so its can be used as some additional header, sticker, toolbox, toolbar, footer etc.
-*`path` - if you use `type: page` you need to provide as well path in our case `welcome` will resolve to `webapp2/welcome` so after navigating to that url we should hopefully see our `MyCustomModuleComponent`.
+Each element of `useValue` array contains an object with:
 
-*if you use `imports` in the module.ts right now we are supporting this modules `CommonModule, FormsModule, HttpClientModule` and you can as well use rxjs inside components*
+  - `name` - the `selector` of the component we can find in `my-custom-module.component.ts`.
+  - `component` just imported component (you can see `import` above)
+  - `type` [page|header] - represents how the component will be included in the pexip clients its either `page` which will be rendered as a separate page eg `webapp2/my-custom-welcome-page` (this needs `path` arg) or `header` (the name might change) this is component that is bascially loaded in the main component in the app so its can be used as some additional header, sticker, toolbox, toolbar, footer etc.
+  - `path` - if you use `type: page` you need to provide as well path in our case `welcome` will resolve to `webapp2/welcome` so after navigating to that url we should hopefully see our `MyCustomModuleComponent`.
 
-**After updating component(s) and updating module file we can export our custom file**
+  - if you use `imports` in the module.ts right now we are supporting this modules `CommonModule, FormsModule, HttpClientModule` and you can as well use rxjs inside components
 
-To do that we need to run `npm run build` which are making the prod builds of our module they are located in the `dist` folder. We only need the `*.umd.js` file which in our case should be located in `dist/my-custom-module/bundles/my-custom-module.min.js`
 
-**Thats it for the module part, now we need to link the module in our custom manifest.json**
+### Build the app
 
-Custom branding skeleton for the new pexip client you can download it from branding portal or created by themself. ( https://docs.pexip.com/admin/customize_clients.htm#create_package )
-In our case we only need one file + folder containing our module so I'll create it from scratch
+from the `projects` directory, build the project:
 
-* First lets create **manifest.json** with custom `id` number (which can be generated) and include our custom module
+```sh
+cd ../../..
+npm run build
+```
+
+This should work
+
+### Linking the module into the pexip app
+
+Grab a skeleton brand from the portal
+
+ - customisations --> new
+ - dashboard --> build with just your customisation in the dropdown
+
+Save the branding.zip generated.
+
+Unpack the zip from above and modify the `manifest.json` in the unpacked skeleton to include a customModules section:
 
 ```json
-{
-    "customModules": [
-        {
-            "name": "MyCustomModuleModule",
-            "srcURL": "custom_configuration/modules/my-custom-module.min.js"
-        }
-    ]
-}
-
+  "customModules": [
+      {
+        "name": "GatherInfoModule",
+        "srcURL": "custom_configuration/modules/gather-info.umd.min.js"
+      }
+  ]
 ```
 
-now lets create modules folder and copy there umd build from now lets copy `dist/my-custom-module/bundles/my-custom-module.min.js`
-all the files should be included in the `webapp2` folder and packed as zip file, so mgmt node can be able to recognize the files when uploading the zip.
+create a `modules` directory in the root and copy in the umd minified js
 
-so our archide should look smth like this:
-```
-/webapp2
-  manifest.json
-  /modules
-    my-custom-module.min.js
+```sh
+cd webapp2
+mkdir modules
+cd modules
+cp ../../gather-info/dist/gather-info/bundles/gather-info.umd.min.js .
 ```
 
-After uploading our branding and navigating to the `/webapp2/welcome` we should be able to see our component and hopefully the `my first custom component in the pexip client!` text in the browser.
+Create the zip and upload to mgmt portal
 
-Currently communication with the webapp is done through PluginAPI ( https://docs.pexip.com/end_user/guide_for_admins/plugins.htm?Highlight=pluginAPI ) so for instance if we want to show the invitation to the meeting card we just need to call `window.PEX.pluginAPI.navigateToInvitationCard(conferenceName: string, pin?: number)` like said in TODO we should expose the entire router there.
+```sh
+zip -r branding_with_module.zip webapp2
+```
 
-*TODO*
+Once the configuration has replicated you're can test your custom route and module at the path `/webapp2/gather` - congratulations.
 
-Include useful services inside custom modules like storage for example or router.
-
+Currently communication with the webapp is done through [PluginAPI]( https://docs.pexip.com/end_user/guide_for_admins/plugins.htm) so for instance if we want to show the invitation to the meeting card we just need to call `window.PEX.pluginAPI.navigateToInvitationCard(conferenceName: string, pin?: number)`
