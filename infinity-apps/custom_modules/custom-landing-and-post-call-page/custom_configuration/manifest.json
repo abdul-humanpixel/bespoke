@@ -1,0 +1,13 @@
+{
+    "brandingID": "custom-landing",
+    "isSettingsBranded": true,
+    "isWatermarkBranded": false,
+    "isStylesBranded": false,
+    "isCustomBackgroundBranded": false,
+    "customModules": [
+        {
+            "name": "MyBankLandingModule",
+            "srcURL": "modules/my-bank-landing.umd.min.js"
+        }
+    ]
+}

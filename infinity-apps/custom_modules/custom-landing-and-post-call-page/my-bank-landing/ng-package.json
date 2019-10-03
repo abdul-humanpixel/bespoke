@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/my-bank-landing",
+  "lib": {
+    "entryFile": "src/public_api.ts",
+    "cssUrl": "inline",
+    "styleIncludePaths": ["./src/styles"],
+    "umdModuleIds": {
+      "firebase/app": "@firebase/app",
+      "firebase/firestore": "@firebase/firestore"
+    }
+  }
+}
