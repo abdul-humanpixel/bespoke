@@ -22,6 +22,16 @@ npm install -g @angular/cli
 ng new gather-info --create-application=false
 ```
 
+#### create-application flag
+
+Setting this to false here removes all the boiler plate and additional components for a full angular application.
+
+If you want to do full development cycle where you can view and debug the "application", then set it to true. You'll be able to run up the dummy application and work with it.
+
+ If you're happy just working on the indivudual components and working with a test deployment to view the app, then stick with false.
+
+
+
 Answer questions about angular routing and analytics
 
  - Would you like to add Angular routing? :: No
@@ -33,6 +43,9 @@ Move into the freshly created repo for your module and create the library.
 
 ```sh
 cd gather-info
+
+npm install
+
 ng generate library gather-info --prefix=gatherinfo
 ```
 
