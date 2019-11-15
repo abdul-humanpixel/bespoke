@@ -11,6 +11,7 @@ For more information on our APIs and how to integrate, check out [docs.pexip.com
 To get you started, here are some shortcuts to some useful pages:
 
  - [All integrations](https://docs.pexip.com/admin/site_integration.htm)
+   All of the integrations for the Pexip platform
  - [The Pexip client API](https://docs.pexip.com/api_client/api_rest.htm)
    Used by our all of our apps to setup calls and communicate with the MCU
  - [PexRTC - JS API](https://docs.pexip.com/api_client/api_pexrtc.htm)
