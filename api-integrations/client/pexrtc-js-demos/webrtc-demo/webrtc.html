@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>Demo Meeting Room</title>
+<script type="text/javascript" src="https://pexipdemo.com/static/webrtc/js/pexrtc.js"></script>
+<script type="text/javascript" src="webui.js"></script>
+<script type='text/javascript'>
+window.onload = function()
+{
+    /* Params: conf node, conf name, bandwidth, display name, PIN */
+    initialise("pexipdemo.com", "meet.demo", null, "Visitor", "");
+}
+</script>
+</head>
+
+<body>
+<h1>WebRTC Demonstration</h1>
+<p>Close window to exit - this places a call to meet.demo@pexipdemo.com on 576kbps - please modify</p>
+<div width='100%' height='100%' style='overflow:auto' id="viewport">
+    <video width="100%" id="video" autoplay="autoplay" poster="https://pexipdemo.com/static/webrtc/img/spinner.gif"/>
+</div>
+</body>
+</html>
