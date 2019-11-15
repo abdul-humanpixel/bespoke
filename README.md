@@ -1,5 +1,3 @@
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
-
 ![bespoke image](https://github.com/pexip/bespoke/blob/master/img/pexip-bespoke-repo-small.png)
 
 A repository to host community driven extensions, plugins,
@@ -23,4 +21,4 @@ To get you started, here are some shortcuts to some useful pages:
 
 If you have a plugin you wish to share, create a pull request.
 
-
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](code-of-conduct.md)
