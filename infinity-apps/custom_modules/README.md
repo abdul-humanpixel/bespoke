@@ -74,7 +74,8 @@ Modify the module ts file `projects/gather-info/gather-info.module.ts` to includ
               component: GatherInfoComponent,
               type: 'page',
               path: 'gather',
-          }]
+          }],
+          multi: true
       }],
       exports: [GatherInfoComponent]
   })
