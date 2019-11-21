@@ -120,7 +120,7 @@ Unpack the zip from above and modify the `manifest.json` in the unpacked skeleto
   "customModules": [
       {
         "name": "GatherInfoModule",
-        "srcURL": "custom_configuration/modules/gather-info.umd.min.js"
+        "srcURL": "modules/gather-info.umd.min.js"
       }
   ]
 ```
